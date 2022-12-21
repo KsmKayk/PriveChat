@@ -1,9 +1,12 @@
 import React from 'react';
+import Navbar from '../Navbar';
 
-// import { Container } from './styles';
+import './styles.scss';
 
 function Sidebar() {
-  return <div />;
+  return <div className='sidebar'>
+    <Navbar/>
+  </div>;
 }
 
 export default Sidebar;
