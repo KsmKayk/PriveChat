@@ -3,8 +3,10 @@ import './styles.scss';
 
 function Home() {
   return (
-    <div className=''>
-      
+    <div className='home'>
+      <div className="container">
+        
+      </div>
     </div>
   );
 }
