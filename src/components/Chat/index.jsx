@@ -4,6 +4,9 @@ import Cam from '../../img/cam.png'
 import Add from '../../img/add.png'
 import More from '../../img/more.png'
 
+import Messages from '../Messages';
+import Input from '../Input';
+
 import './styles.scss';
 
 function Chat() {
@@ -16,6 +19,8 @@ function Chat() {
         <img src={More} alt="more icon" />
       </div>
     </div>
+    <Messages/>
+    <Input/>
   </div>;
 }
 

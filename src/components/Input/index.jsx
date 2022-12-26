@@ -1,9 +1,22 @@
 import React from 'react';
 
-// import { Container } from './styles';
+import Img from "../../img/img.png"
+import Attach from "../../img/attach.png"
+
+import './styles.scss';
 
 function Input() {
-  return <div />;
+  return <div className="input">
+    <input type="text" placeholder='Type something...' />
+    <div className="send">
+      <img src={Attach} alt="attach icon" className='attach'/>
+      <input type="file" style={{display:"none"}} id="file"/>
+      <label htmlFor="file">
+        <img src={Img} alt="img icon"/>
+      </label>
+      <button>Send</button>
+    </div>
+  </div>;
 }
 
 export default Input;
