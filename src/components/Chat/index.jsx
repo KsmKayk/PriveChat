@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useContext} from 'react';
+import {ChatContext} from '../../context/ChatContext';
 
 import Cam from '../../img/cam.png'
 import Add from '../../img/add.png'
@@ -10,9 +11,11 @@ import Input from '../Input';
 import './styles.scss';
 
 function Chat() {
+  const {data} = useContext(ChatContext)
+
   return <div className='chat'>
     <div className="chatInfo">
-      <span>Jane</span>
+      <span>{data.user?.displayName}</span>
       <div className="chatIcons">
         <img src={Cam} alt="cam icon" />
         <img src={Add} alt="add icon" />

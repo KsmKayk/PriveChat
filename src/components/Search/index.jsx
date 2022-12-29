@@ -2,6 +2,7 @@ import React, {useState, useContext} from 'react';
 import {collection,query,where,getDocs,setDoc,doc,updateDoc,serverTimestamp,getDoc,} from 'firebase/firestore';
 import {db} from '../../firebase';
 import {AuthContext} from '../../context/AuthContext';
+import {ChatContext} from '../../context/ChatContext';
 
 import './styles.scss';
 
@@ -11,6 +12,7 @@ function Search() {
   const [err, setErr] = useState(null);
 
   const {currentUser} = useContext(AuthContext)
+  const {dispatch} = useContext(ChatContext)
 
   const handleSearch = async () => {
     const q = query(collection(db, 'users'), where('displayName', '==', username));
@@ -31,19 +33,44 @@ function Search() {
     e.code === 'Enter' && handleSearch();
   }
 
-  const handleSelect = async () => {
+  const handleSelect = async (u) => {
     const combinedId = currentUser.uid > user.uid ? currentUser.uid + user.uid : user.uid + currentUser.uid;
     try{
-      const res = await getDocs(db,'chats')
+      const res = await getDoc(doc(db,'chats',combinedId))
 
-      if(!res.exists) {
-        await setDoc(doc,(db, 'chats', combinedId),{
+      if(!res.exists()) {
+        await setDoc(doc(db, 'chats', combinedId),{
           messages:[]
         })
-      } 
+      }
+      
+      await updateDoc(doc(db, 'userChats', currentUser.uid), {
+        [combinedId+".userInfo"]: {
+          uid: user.uid,
+          displayName: user.displayName,
+          photoURL: user.photoURL
+        },
+        [combinedId+".date"]: serverTimestamp()
+      })
+
+      await updateDoc(doc(db, 'userChats', user.uid), {
+        [combinedId+".userInfo"]: {
+          uid: currentUser.uid,
+          displayName: currentUser.displayName,
+          photoURL: currentUser.photoURL
+        },
+        [combinedId+".date"]: serverTimestamp()
+      })
+
+
     } catch (error) {
 
     }
+
+    setUser(null)
+    setUsername('')
+    dispatch({type:"CHANGE_USER", payload:u})
+
   }
 
   return (
@@ -59,7 +86,7 @@ function Search() {
       </div>
       {err && <span>User not found!</span>}
       {user && (
-        <div className="userChat" onClick={handleSelect}>
+        <div className="userChat" onClick={() => handleSelect(user)}>
           <img src={user.photoURL} alt="" />
           <div className="userChatInfo">
             <span>{user.displayName}</span>
